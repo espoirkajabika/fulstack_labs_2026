@@ -1,0 +1,76 @@
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 20px;
+}
+
+.logo-container img {
+    height: 80px;
+    width: auto;
+}
+
+.search-bar {
+    flex: 1; /* Takes up available space between logo and nav */
+    max-width: 400px; /* Prevents it from getting too wide */
+    display: flex;
+    gap: 10px;
+}
+
+#search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+#search-btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#search-btn:hover {
+    background-color: #0056b3;
+}
+
+#nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+}
+
+#nav-menu a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+#nav-menu a:hover {
+    color: #007bff;
+}
+
+/* Add padding to header so it doesn't overlap with logo */
+header {
+  padding-top: 80px; /* Adjust based on your logo size */
+  text-align: center;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
