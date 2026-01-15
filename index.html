@@ -8,10 +8,10 @@
 </head>
 <body>
     <nav class="logo-container">
-        <img src="https://itsm-ace.ca/images/logo.svg" alt="Company Logo">
+        <img src="https://itsm-ace.ca/images/logo.svg" alt="Pixell River Logo">
         
         <div class="search-bar">
-            <input type="text" id="search-input" placeholder="Search...">
+            <input type="text" id="search-input" placeholder="Search employees...">
             <button type="button" id="search-btn">Search</button>
         </div>
         
@@ -21,15 +21,16 @@
     </nav>
     
     <header>
-        <h1>Welcome to Pixell River Employee Directory</h1>
+        <h1>Pixell River Employee Directory</h1>
+        <p class="greeting">Welcome to our employee directory. Find contact information for all staff members.</p>
     </header>
 
-    <main>
-        <p>This is the main content area of your website.</p>
+    <main id="employee-list">
+        <!-- Employee list will be populated by JavaScript -->
     </main>
 
     <footer>
-        <p>&copy; Copyright Pixell River Financial </p>
+        <p>&copy; <span id="current-year"></span> Pixell River Financial</p>
     </footer>
 
     <script src="script.js"></script>
