@@ -1,40 +1,14 @@
-import { useState, useEffect } from 'react';
-import Page from './components/Page';
-import Main from './components/Main';
-import { Employee } from './types/Employee';
-import employeesData from './data/employees.json';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import DirectoryPage from './pages/DirectoryPage';
+import NotFoundPage from './pages/NotFoundPage';
 import './App.css';
 
-function App() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
-
-  useEffect(() => {
-    setEmployees(employeesData);
-    setFilteredEmployees(employeesData);
-  }, []);
-
-  const handleSearch = (query: string) => {
-    if (!query.trim()) {
-      setFilteredEmployees(employees);
-      return;
-    }
-
-    const lowercaseQuery = query.toLowerCase();
-    const filtered = employees.filter(
-      (employee) =>
-        employee.name.toLowerCase().includes(lowercaseQuery) ||
-        employee.position.toLowerCase().includes(lowercaseQuery) ||
-        employee.department.toLowerCase().includes(lowercaseQuery)
-    );
-    setFilteredEmployees(filtered);
-  };
-
+export default function App() {
   return (
-    <Page onSearch={handleSearch}>
-      <Main employees={filteredEmployees} />
-    </Page>
+    <Routes>
+      <Route path="/" element={<Navigate to="/directory" replace />} />
+      <Route path="/directory" element={<DirectoryPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }
-
-export default App;

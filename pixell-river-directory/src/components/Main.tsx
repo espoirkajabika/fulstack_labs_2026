@@ -1,4 +1,4 @@
-import { Employee as EmployeeType } from '../types/Employee';
+import type { Employee as EmployeeType } from '../types/Employee';
 import Employee from './Employee';
 
 interface MainProps {

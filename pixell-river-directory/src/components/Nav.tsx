@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 
 interface NavProps {
   onSearch: (query: string) => void;
@@ -35,11 +37,10 @@ const Nav: React.FC<NavProps> = ({ onSearch }) => {
         </button>
       </div>
       
-      <ul id="nav-menu">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#directory">Directory</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+        <ul id="nav-menu">
+            <li><Link to="/directory">Directory</Link></li>
+        </ul>
+
     </nav>
   );
 };
