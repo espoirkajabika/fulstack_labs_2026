@@ -1,19 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Page from '../components/Page';
 import Main from '../components/Main';
-import type { Employee } from '../types/Employee';
-import employeesData from '../data/employees.json';
-
-// If you already built Lab 2.1 form, import it here:
-// import AddEmployeeForm from '../components/AddEmployeeForm';
+import AddEmployeeForm from '../components/AddEmployeeForm';
+import employeeService from '../services/employeeService';
 
 export default function DirectoryPage() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  // State is only for presentation: the list we render and the search filter.
+  // The actual data lives in the repository; we pull it through the service.
+  const [employees, setEmployees] = useState(employeeService.getEmployees());
   const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    setEmployees(employeesData);
-  }, []);
 
   const filteredEmployees = useMemo(() => {
     if (!searchQuery.trim()) return employees;
@@ -29,12 +24,18 @@ export default function DirectoryPage() {
 
   const handleSearch = (query: string) => setSearchQuery(query);
 
+  /**
+   * Called by the form after a successful creation.
+   * Re-fetches the employee list from the service/repo to keep state in sync.
+   */
+  const handleEmployeeAdded = useCallback(() => {
+    setEmployees(employeeService.getEmployees());
+  }, []);
+
   return (
     <Page onSearch={handleSearch}>
       <Main employees={filteredEmployees} />
-
-      {/* Lab 2.1: keep your Add Employee form at the bottom here */}
-      {/* <AddEmployeeForm ... /> */}
+      <AddEmployeeForm onEmployeeAdded={handleEmployeeAdded} />
     </Page>
   );
 }

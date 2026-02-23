@@ -1,0 +1,7 @@
+[
+  { "id": 1, "name": "Investments" },
+  { "id": 2, "name": "Operations" },
+  { "id": 3, "name": "Lending" },
+  { "id": 4, "name": "Insurance" },
+  { "id": 5, "name": "Human Resources" }
+]
