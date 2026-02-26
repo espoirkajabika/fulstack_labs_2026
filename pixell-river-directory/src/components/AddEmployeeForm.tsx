@@ -1,5 +1,4 @@
 import useFormInput from '../hooks/useFormInput';
-import employeeRepo from '../repositories/employeeRepo';
 import employeeService from '../services/employeeService';
 
 interface AddEmployeeFormProps {
@@ -14,7 +13,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onEmployeeAdded }) =>
   const email = useFormInput('');
   const phone = useFormInput('');
 
-  const departments = employeeRepo.getDepartments();
+  const departments = employeeService.getDepartments();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
