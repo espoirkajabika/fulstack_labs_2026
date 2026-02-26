@@ -1,5 +1,6 @@
 import type { Employee } from '../types/Employee';
 import employeeRepo from '../repositories/employeeRepo';
+import type { Department } from '../types/Department';
 
 export interface ValidationResult {
   success: boolean;
@@ -78,6 +79,14 @@ const employeeService = {
   getEmployeesByDepartment(): Record<string, Employee[]> {
     return employeeRepo.getEmployeesByDepartment();
   },
+
+  /**
+   * Retrieves all departments from the repository.
+   */
+  getDepartments(): Department[] {
+    return employeeRepo.getDepartments();
+  },
+
 };
 
 export default employeeService;

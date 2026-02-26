@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "firstName": "Sarah",
+    "lastName": "Johnson",
+    "role": "Branch Manager"
+  },
+  {
+    "id": 2,
+    "firstName": "John",
+    "lastName": "Smith",
+    "role": "Senior Financial Advisor"
+  },
+  {
+    "id": 3,
+    "firstName": "Michael",
+    "lastName": "Chen",
+    "role": "Mortgage Specialist"
+  }
+]

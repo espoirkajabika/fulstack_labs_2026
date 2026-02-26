@@ -39,6 +39,7 @@ const Nav: React.FC<NavProps> = ({ onSearch }) => {
       
         <ul id="nav-menu">
             <li><Link to="/directory">Directory</Link></li>
+            <li><Link to="/organization">Organization</Link></li>
         </ul>
 
     </nav>

@@ -5,8 +5,6 @@ import AddEmployeeForm from '../components/AddEmployeeForm';
 import employeeService from '../services/employeeService';
 
 export default function DirectoryPage() {
-  // State is only for presentation: the list we render and the search filter.
-  // The actual data lives in the repository; we pull it through the service.
   const [employees, setEmployees] = useState(employeeService.getEmployees());
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -24,16 +22,16 @@ export default function DirectoryPage() {
 
   const handleSearch = (query: string) => setSearchQuery(query);
 
-  /**
-   * Called by the form after a successful creation.
-   * Re-fetches the employee list from the service/repo to keep state in sync.
-   */
   const handleEmployeeAdded = useCallback(() => {
     setEmployees(employeeService.getEmployees());
   }, []);
 
   return (
-    <Page onSearch={handleSearch}>
+    <Page
+      onSearch={handleSearch}
+      title="Employee Directory"
+      subtitle="Find contact information for all staff members."
+    >
       <Main employees={filteredEmployees} />
       <AddEmployeeForm onEmployeeAdded={handleEmployeeAdded} />
     </Page>
