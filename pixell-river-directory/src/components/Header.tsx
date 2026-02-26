@@ -1,10 +1,16 @@
-const Header: React.FC = () => {
+interface HeaderProps {
+  title?: string;
+  subtitle?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({
+  title = 'Pixell River Financial',
+  subtitle = 'Welcome to our company portal.',
+}) => {
   return (
     <header>
-      <h1>Pixell River Employee Directory</h1>
-      <p className="greeting">
-        Welcome to our employee directory. Find contact information for all staff members.
-      </p>
+      <h1>{title}</h1>
+      <p className="greeting">{subtitle}</p>
     </header>
   );
 };

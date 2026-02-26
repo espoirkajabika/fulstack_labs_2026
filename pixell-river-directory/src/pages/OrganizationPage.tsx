@@ -12,7 +12,11 @@ export default function OrganizationPage() {
   }, []);
 
   return (
-    <Page onSearch={() => {}}>
+    <Page
+      onSearch={() => {}}
+      title="Organization"
+      subtitle="View and manage roles across the company."
+    >
       <main id="employee-list">
         {roles.length === 0 ? (
           <p className="no-results">No roles found.</p>
