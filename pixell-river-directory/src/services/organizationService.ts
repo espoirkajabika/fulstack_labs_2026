@@ -1,6 +1,12 @@
 import type { Role } from '../types/Role';
 import organizationRepo from '../repositories/organizationRepo';
 
+export interface CreateRoleInput {
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
 export interface RoleValidationResult {
   success: boolean;
   errors: {
@@ -9,62 +15,34 @@ export interface RoleValidationResult {
   };
 }
 
-export interface CreateRoleInput {
-  firstName: string;
-  lastName: string;
-  role: string;
-}
-
 const organizationService = {
-  /**
-   * Validates and creates a new organization role record.
-   * Returns the created role on success, or validation errors on failure.
-   */
-  createRole(
-    input: CreateRoleInput
-  ): { role?: Role; validation: RoleValidationResult } {
-    const validation = this.validateRole(input);
-
-    if (!validation.success) {
-      return { validation };
-    }
-
-    const role = organizationRepo.createRole({
-      firstName: input.firstName,
-      lastName: input.lastName,
-      role: input.role,
-    });
-
-    return { role, validation };
+  async getRoles(): Promise<Role[]> {
+    return organizationRepo.getRoles();
   },
 
-  /**
-   * Validates the role data before creation.
-   *  - First name must be at least 3 characters.
-   *  - A person cannot be created for a role that is already occupied.
-   */
-  validateRole(input: CreateRoleInput): RoleValidationResult {
+  async createRole(input: CreateRoleInput): Promise<{ role?: Role; validation: RoleValidationResult }> {
     const errors: RoleValidationResult['errors'] = {};
 
     if (input.firstName.trim().length < 3) {
       errors.firstName = 'First name must be at least 3 characters.';
     }
 
-    if (organizationRepo.isRoleOccupied(input.role)) {
+    const occupied = await organizationRepo.isRoleOccupied(input.role);
+    if (occupied) {
       errors.role = 'This role is already occupied.';
     }
 
-    return {
-      success: Object.keys(errors).length === 0,
-      errors,
-    };
-  },
+    if (Object.keys(errors).length > 0) {
+      return { validation: { success: false, errors } };
+    }
 
-  /**
-   * Retrieves all organization role records from the repository.
-   */
-  getRoles(): Role[] {
-    return organizationRepo.getRoles();
+    const role = await organizationRepo.createRole({
+      firstName: input.firstName,
+      lastName: input.lastName,
+      role: input.role,
+    });
+
+    return { role, validation: { success: true, errors: {} } };
   },
 };
 

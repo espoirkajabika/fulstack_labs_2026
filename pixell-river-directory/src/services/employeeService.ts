@@ -1,14 +1,6 @@
 import type { Employee } from '../types/Employee';
-import employeeRepo from '../repositories/employeeRepo';
 import type { Department } from '../types/Department';
-
-export interface ValidationResult {
-  success: boolean;
-  errors: {
-    firstName?: string;
-    department?: string;
-  };
-}
+import employeeRepo from '../repositories/employeeRepo';
 
 export interface CreateEmployeeInput {
   firstName: string;
@@ -19,21 +11,40 @@ export interface CreateEmployeeInput {
   phone: string;
 }
 
-const employeeService = {
-  /**
-   * Validates and creates a new employee.
-   * Returns the created employee on success, or validation errors on failure.
-   */
-  createEmployee(
-    input: CreateEmployeeInput
-  ): { employee?: Employee; validation: ValidationResult } {
-    const validation = this.validateEmployee(input);
+export interface ValidationResult {
+  success: boolean;
+  errors: {
+    firstName?: string;
+    department?: string;
+  };
+}
 
-    if (!validation.success) {
-      return { validation };
+const employeeService = {
+  async getEmployees(): Promise<Employee[]> {
+    return employeeRepo.getEmployees();
+  },
+
+  async getDepartments(): Promise<Department[]> {
+    return employeeRepo.getDepartments();
+  },
+
+  async createEmployee(input: CreateEmployeeInput): Promise<{ employee?: Employee; validation: ValidationResult }> {
+    const errors: ValidationResult['errors'] = {};
+
+    if (input.firstName.trim().length < 3) {
+      errors.firstName = 'First name must be at least 3 characters.';
     }
 
-    const employee = employeeRepo.createEmployee({
+    const deptExists = await employeeRepo.departmentExists(input.department);
+    if (!deptExists) {
+      errors.department = 'Department does not exist.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return { validation: { success: false, errors } };
+    }
+
+    const employee = await employeeRepo.createEmployee({
       name: `${input.firstName} ${input.lastName}`,
       position: input.position,
       department: input.department,
@@ -41,52 +52,8 @@ const employeeService = {
       phone: input.phone,
     });
 
-    return { employee, validation };
+    return { employee, validation: { success: true, errors: {} } };
   },
-
-  /**
-   * Validates the employee data before creation.
-   *  - First name must be at least 3 characters.
-   *  - Department must exist in the repository.
-   */
-  validateEmployee(input: CreateEmployeeInput): ValidationResult {
-    const errors: ValidationResult['errors'] = {};
-
-    if (input.firstName.trim().length < 3) {
-      errors.firstName = 'First name must be at least 3 characters.';
-    }
-
-    if (!employeeRepo.departmentExists(input.department)) {
-      errors.department = 'Department does not exist.';
-    }
-
-    return {
-      success: Object.keys(errors).length === 0,
-      errors,
-    };
-  },
-
-  /**
-   * Retrieves all employees from the repository.
-   */
-  getEmployees(): Employee[] {
-    return employeeRepo.getEmployees();
-  },
-
-  /**
-   * Retrieves employees grouped by department from the repository.
-   */
-  getEmployeesByDepartment(): Record<string, Employee[]> {
-    return employeeRepo.getEmployeesByDepartment();
-  },
-
-  /**
-   * Retrieves all departments from the repository.
-   */
-  getDepartments(): Department[] {
-    return employeeRepo.getDepartments();
-  },
-
 };
 
 export default employeeService;
