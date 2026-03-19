@@ -30,4 +30,12 @@ const employeeController = {
     });
 
     if (!result.validation.success) {
-      res.status(422).json({ validat      res.status(422).json({ validat      res.status(422).json({ valjs      res.status(422).json({ validat default employeeController;
+      res.status(422).json({ validation: result.validation });
+      return;
+    }
+
+    res.status(201).json(result.employee);
+  },
+};
+
+export default employeeController;

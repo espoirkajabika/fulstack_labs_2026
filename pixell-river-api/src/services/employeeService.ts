@@ -35,17 +35,28 @@ const employeeService = {
   createEmployee(input: CreateEmployeeInput): { employee?: Employee; validation: ValidationResult } {
     const validation = this.validateEmployee(input);
     if (!validation.success) {
-      return { validati      return { validati      return { validati      return { v
-                                                  ,
-                                                  ,
-rutrutrutrutrutrutrutrutrutrutrutrutrutrutrutrutrutrutrutrut.phone,
+      return { validation };
+    }
+    const employee = employeeRepo.createEmployee({
+      name: `${input.firstName} ${input.lastName}`,
+      position: input.position,
+      department: input.department,
+      email: input.email,
+      phone: input.phone,
     });
     return { employee, validation };
   },
 
   validateEmployee(input: CreateEmployeeInput): ValidationResult {
-    const errors: ValidationResult    const errors: ValidationResuirstName.trim().length <    con     errors.firstName = 'Firs    const errors: Valst 3 characters.';
+    const errors: ValidationResult['errors'] = {};
+    if (input.firstName.trim().length < 3) {
+      errors.firstName = 'First name must be at least 3 characters.';
     }
     if (!employeeRepo.departmentExists(input.department)) {
-      errors.department = 'Dep      errors.department = 'Dep}
-                                        ).length ==                        export default employeeService;
+      errors.department = 'Department does not exist.';
+    }
+    return { success: Object.keys(errors).length === 0, errors };
+  },
+};
+
+export default employeeService;

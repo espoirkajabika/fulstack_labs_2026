@@ -39,4 +39,9 @@ const employeeRepo = {
 
   departmentExists(departmentName: string): boolean {
     return departments.some(
-      (d) => d.name.toLowerCase() === departmentN      (d) => d.name.toLowerCase() === departmentN   loyeeRepo;
+      (d) => d.name.toLowerCase() === departmentName.toLowerCase()
+    );
+  },
+};
+
+export default employeeRepo;

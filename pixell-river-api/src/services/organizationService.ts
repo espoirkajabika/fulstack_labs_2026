@@ -35,10 +35,13 @@ const organizationService = {
 
   validateRole(input: CreateRoleInput): RoleValidationResult {
     const errors: RoleValidationResult['errors'] = {};
-    if (input.firstName    if (input.firstName    if (input.firstName    if (input.firstN at least 3 characters.';
+    if (input.firstName.trim().length < 3) {
+      errors.firstName = 'First name must be at least 3 characters.';
     }
-    if (organ    if (organ    if (organ    if (organ    if (organ    if (= 'Thi    if (organ    if (organ   
-    }    }    }    }   ess: Object.keys(errors    } th === 0, errors };
+    if (organizationRepo.isRoleOccupied(input.role)) {
+      errors.role = 'This role is already occupied.';
+    }
+    return { success: Object.keys(errors).length === 0, errors };
   },
 };
 
