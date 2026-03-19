@@ -1,16 +1,20 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Page from '../components/Page';
 import Main from '../components/Main';
 import AddEmployeeForm from '../components/AddEmployeeForm';
 import employeeService from '../services/employeeService';
+import type { Employee } from '../types/Employee';
 
 export default function DirectoryPage() {
-  const [employees, setEmployees] = useState(employeeService.getEmployees());
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    employeeService.getEmployees().then(setEmployees);
+  }, []);
 
   const filteredEmployees = useMemo(() => {
     if (!searchQuery.trim()) return employees;
-
     const q = searchQuery.toLowerCase();
     return employees.filter(
       (e) =>
@@ -23,7 +27,7 @@ export default function DirectoryPage() {
   const handleSearch = (query: string) => setSearchQuery(query);
 
   const handleEmployeeAdded = useCallback(() => {
-    setEmployees(employeeService.getEmployees());
+    employeeService.getEmployees().then(setEmployees);
   }, []);
 
   return (

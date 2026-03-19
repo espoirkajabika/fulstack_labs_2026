@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import useFormInput from '../hooks/useFormInput';
 import employeeService from '../services/employeeService';
+import type { Department } from '../types/Department';
 
 interface AddEmployeeFormProps {
   onEmployeeAdded: () => void;
@@ -13,13 +15,16 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onEmployeeAdded }) =>
   const email = useFormInput('');
   const phone = useFormInput('');
 
-  const departments = employeeService.getDepartments();
+  const [departments, setDepartments] = useState<Department[]>([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    employeeService.getDepartments().then(setDepartments);
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Use the service to attempt creation (it validates internally)
-    const { employee, validation } = employeeService.createEmployee({
+    const result = await employeeService.createEmployee({
       firstName: firstName.value,
       lastName: lastName.value,
       position: position.value,
@@ -28,26 +33,23 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onEmployeeAdded }) =>
       phone: phone.value,
     });
 
-    // If validation failed, push error messages back to the hooks
-    if (!validation.success) {
-      if (validation.errors.firstName) {
-        firstName.setMessage(validation.errors.firstName);
+    if (!result.validation.success) {
+      if (result.validation.errors.firstName) {
+        firstName.setMessage(result.validation.errors.firstName);
       }
-      if (validation.errors.department) {
-        department.setMessage(validation.errors.department);
+      if (result.validation.errors.department) {
+        department.setMessage(result.validation.errors.department);
       }
       return;
     }
 
-    if (employee) {
-      // Reset all fields on success
+    if (result.employee) {
       firstName.reset();
       lastName.reset();
       position.reset();
       department.reset();
       email.reset();
       phone.reset();
-
       onEmployeeAdded();
     }
   };
