@@ -10,30 +10,29 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({ onRoleAdded }) => {
   const lastName = useFormInput('');
   const role = useFormInput('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const { role: createdRole, validation } = organizationService.createRole({
+    const result = await organizationService.createRole({
       firstName: firstName.value,
       lastName: lastName.value,
       role: role.value,
     });
 
-    if (!validation.success) {
-      if (validation.errors.firstName) {
-        firstName.setMessage(validation.errors.firstName);
+    if (!result.validation.success) {
+      if (result.validation.errors.firstName) {
+        firstName.setMessage(result.validation.errors.firstName);
       }
-      if (validation.errors.role) {
-        role.setMessage(validation.errors.role);
+      if (result.validation.errors.role) {
+        role.setMessage(result.validation.errors.role);
       }
       return;
     }
 
-    if (createdRole) {
+    if (result.role) {
       firstName.reset();
       lastName.reset();
       role.reset();
-
       onRoleAdded();
     }
   };

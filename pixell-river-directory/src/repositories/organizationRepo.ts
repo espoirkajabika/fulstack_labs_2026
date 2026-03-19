@@ -1,38 +1,26 @@
 import type { Role } from '../types/Role';
-import rolesData from '../data/roles.json';
 
-// In-memory data store — the single source of truth for organization records
-let roles: Role[] = [...rolesData];
-let nextId: number =
-  roles.length > 0 ? Math.max(...roles.map((r) => r.id)) + 1 : 1;
+const API_BASE = 'http://localhost:3001/api';
 
 const organizationRepo = {
-  /**
-   * Returns all organization role records.
-   */
-  getRoles(): Role[] {
-    return [...roles];
+  async getRoles(): Promise<Role[]> {
+    const res = await fetch(`${API_BASE}/organization`);
+    if (!res.ok) throw new Error('Failed to fetch roles');
+    return res.json();
   },
 
-  /**
-   * Creates a new organization role record and adds it to the store.
-   * Returns the newly created record with an assigned id.
-   */
-  createRole(roleData: Omit<Role, 'id'>): Role {
-    const newRole: Role = {
-      id: nextId++,
-      ...roleData,
-    };
-
-    roles = [...roles, newRole];
-    return { ...newRole };
+  async createRole(data: Omit<Role, 'id'>): Promise<Role> {
+    const res = await fetch(`${API_BASE}/organization`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Failed to create role');
+    return res.json();
   },
 
-  /**
-   * Checks whether a role is already occupied by someone.
-   * Returns true if someone already holds this role.
-   */
-  isRoleOccupied(roleName: string): boolean {
+  async isRoleOccupied(roleName: string): Promise<boolean> {
+    const roles = await this.getRoles();
     return roles.some(
       (r) => r.role.toLowerCase() === roleName.toLowerCase()
     );

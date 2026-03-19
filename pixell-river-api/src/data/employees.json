@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "John Smith",
+    "position": "Senior Financial Advisor",
+    "department": "Investments",
+    "email": "john.smith@pixellriver.com",
+    "phone": "(204) 555-0101"
+  },
+  {
+    "id": 2,
+    "name": "Sarah Johnson",
+    "position": "Branch Manager",
+    "department": "Operations",
+    "email": "sarah.johnson@pixellriver.com",
+    "phone": "(204) 555-0102"
+  },
+  {
+    "id": 3,
+    "name": "Michael Chen",
+    "position": "Mortgage Specialist",
+    "department": "Lending",
+    "email": "michael.chen@pixellriver.com",
+    "phone": "(204) 555-0103"
+  }
+]

@@ -1,68 +1,36 @@
 import type { Employee } from '../types/Employee';
 import type { Department } from '../types/Department';
-import employeesData from '../data/employees.json';
-import departmentsData from '../data/departments.json';
 
-// In-memory data store — the single source of truth
-let employees: Employee[] = [...employeesData];
-let departments: Department[] = [...departmentsData];
-let nextId: number = employees.length > 0
-  ? Math.max(...employees.map((e) => e.id)) + 1
-  : 1;
+const API_BASE = 'http://localhost:3001/api';
 
 const employeeRepo = {
-  /**
-   * Returns all employees.
-   */
-  getEmployees(): Employee[] {
-    return [...employees];
+  async getEmployees(): Promise<Employee[]> {
+    const res = await fetch(`${API_BASE}/employees`);
+    if (!res.ok) throw new Error('Failed to fetch employees');
+    return res.json();
   },
 
-  /**
-   * Returns all departments.
-   */
-  getDepartments(): Department[] {
-    return [...departments];
+  async getDepartments(): Promise<Department[]> {
+    const res = await fetch(`${API_BASE}/employees/departments`);
+    if (!res.ok) throw new Error('Failed to fetch departments');
+    return res.json();
   },
 
-  /**
-   * Returns employees grouped by their department.
-   */
-  getEmployeesByDepartment(): Record<string, Employee[]> {
-    const grouped: Record<string, Employee[]> = {};
-
-    for (const dept of departments) {
-      grouped[dept.name] = [];
-    }
-
-    for (const emp of employees) {
-      if (!grouped[emp.department]) {
-        grouped[emp.department] = [];
-      }
-      grouped[emp.department].push({ ...emp });
-    }
-
-    return grouped;
+  async createEmployee(data: Omit<Employee, 'id'>): Promise<Employee> {
+    const nameParts = data.name.split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ');
+    const res = await fetch(`${API_BASE}/employees`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, position: data.position, department: data.department, email: data.email, phone: data.phone }),
+    });
+    if (!res.ok) throw new Error('Failed to create employee');
+    return res.json();
   },
 
-  /**
-   * Creates a new employee and adds it to the in-memory store.
-   * Returns the newly created employee with an assigned id.
-   */
-  createEmployee(employeeData: Omit<Employee, 'id'>): Employee {
-    const newEmployee: Employee = {
-      id: nextId++,
-      ...employeeData,
-    };
-
-    employees = [...employees, newEmployee];
-    return { ...newEmployee };
-  },
-
-  /**
-   * Checks whether a department with the given name exists.
-   */
-  departmentExists(departmentName: string): boolean {
+  async departmentExists(departmentName: string): Promise<boolean> {
+    const departments = await this.getDepartments();
     return departments.some(
       (d) => d.name.toLowerCase() === departmentName.toLowerCase()
     );

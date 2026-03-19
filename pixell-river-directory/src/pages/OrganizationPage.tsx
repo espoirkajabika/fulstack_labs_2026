@@ -1,14 +1,19 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Page from '../components/Page';
 import RoleCard from '../components/RoleCard';
 import AddRoleForm from '../components/AddRoleForm';
 import organizationService from '../services/organizationService';
+import type { Role } from '../types/Role';
 
 export default function OrganizationPage() {
-  const [roles, setRoles] = useState(organizationService.getRoles());
+  const [roles, setRoles] = useState<Role[]>([]);
+
+  useEffect(() => {
+    organizationService.getRoles().then(setRoles);
+  }, []);
 
   const handleRoleAdded = useCallback(() => {
-    setRoles(organizationService.getRoles());
+    organizationService.getRoles().then(setRoles);
   }, []);
 
   return (
