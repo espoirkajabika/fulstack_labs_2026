@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut, SignInButton } from '@clerk/clerk-react';
 import useFormInput from '../hooks/useFormInput';
 import organizationService from '../services/organizationService';
 
@@ -39,54 +40,65 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({ onRoleAdded }) => {
 
   return (
     <section className="add-employee-form">
-      <h2>Add New Role</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="roleFirstName">First Name</label>
-          <input
-            type="text"
-            id="roleFirstName"
-            value={firstName.value}
-            onChange={firstName.handleChange}
-            placeholder="First name (min. 3 characters)"
-          />
-          {firstName.message && (
-            <span className="field-error">{firstName.message}</span>
-          )}
+      <SignedOut>
+        <div className="auth-prompt">
+          <p>You must be logged in to add roles.</p>
+          <SignInButton mode="modal">
+            <button className="submit-btn">Log In</button>
+          </SignInButton>
         </div>
+      </SignedOut>
 
-        <div className="form-group">
-          <label htmlFor="roleLastName">Last Name</label>
-          <input
-            type="text"
-            id="roleLastName"
-            value={lastName.value}
-            onChange={lastName.handleChange}
-            placeholder="Last name"
-          />
-          {lastName.message && (
-            <span className="field-error">{lastName.message}</span>
-          )}
-        </div>
+      <SignedIn>
+        <h2>Add New Role</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="roleFirstName">First Name</label>
+            <input
+              type="text"
+              id="roleFirstName"
+              value={firstName.value}
+              onChange={firstName.handleChange}
+              placeholder="First name (min. 3 characters)"
+            />
+            {firstName.message && (
+              <span className="field-error">{firstName.message}</span>
+            )}
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="roleName">Role</label>
-          <input
-            type="text"
-            id="roleName"
-            value={role.value}
-            onChange={role.handleChange}
-            placeholder="Role title"
-          />
-          {role.message && (
-            <span className="field-error">{role.message}</span>
-          )}
-        </div>
+          <div className="form-group">
+            <label htmlFor="roleLastName">Last Name</label>
+            <input
+              type="text"
+              id="roleLastName"
+              value={lastName.value}
+              onChange={lastName.handleChange}
+              placeholder="Last name"
+            />
+            {lastName.message && (
+              <span className="field-error">{lastName.message}</span>
+            )}
+          </div>
 
-        <button type="submit" className="submit-btn">
-          Add Role
-        </button>
-      </form>
+          <div className="form-group">
+            <label htmlFor="roleName">Role</label>
+            <input
+              type="text"
+              id="roleName"
+              value={role.value}
+              onChange={role.handleChange}
+              placeholder="Role title"
+            />
+            {role.message && (
+              <span className="field-error">{role.message}</span>
+            )}
+          </div>
+
+          <button type="submit" className="submit-btn">
+            Add Role
+          </button>
+        </form>
+      </SignedIn>
     </section>
   );
 };
